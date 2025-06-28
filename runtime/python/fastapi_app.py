@@ -5,6 +5,7 @@ from cosyvoice.cli.cosyvoice import CosyVoice, CosyVoice2
 from cosyvoice.utils.file_utils import load_wav
 from fastapi.responses import StreamingResponse
 import io
+import pykakasi
 
 app = FastAPI()
 
@@ -37,9 +38,13 @@ async def text_to_speech(request: TTSRequest):
     try:
         prompt_speech_16k = load_wav(request.wav, 16000)
 
+        kks = pykakasi.kakasi()
+        result = kks.convert(request.tts)
+        jp_tts = " ".join([item['hira'] for item in result])
+
         # Generate speech
         model_output_generator = cosyvoice.inference_zero_shot(
-            request.tts, request.prompt, prompt_speech_16k
+            jp_tts, request.prompt, prompt_speech_16k, speed=request.speed,
         )
         model_output = next(model_output_generator)
         output_wav = model_output["tts_speech"].numpy()

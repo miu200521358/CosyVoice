@@ -8,11 +8,13 @@ stop_stage=3
 data_url=www.openslr.org/resources/60
 data_dir=/mnt/lyuxiang.lx/data/tts/openslr/libritts
 pretrained_model_dir=../../../pretrained_models/CosyVoice2-0.5B
+local_dir=../cosyvoice/local
+cosyvoice_dir=../../cosyvoice
 
 if [ ${stage} -le -1 ] && [ ${stop_stage} -ge -1 ]; then
   echo "Data Download"
   for part in dev-clean test-clean dev-other test-other train-clean-100 train-clean-360 train-other-500; do
-    local/download_and_untar.sh ${data_dir} ${data_url} ${part}
+    $local_dir/download_and_untar.sh ${data_dir} ${data_url} ${part}
   done
 fi
 
@@ -20,7 +22,7 @@ if [ ${stage} -le 0 ] && [ ${stop_stage} -ge 0 ]; then
   echo "Data preparation, prepare wav.scp/text/utt2spk/spk2utt"
   for x in train-clean-100 train-clean-360 train-other-500 dev-clean dev-other test-clean test-other; do
     mkdir -p data/$x
-    python local/prepare_data.py --src_dir $data_dir/LibriTTS/$x --des_dir data/$x
+    python $local_dir/prepare_data.py --src_dir $data_dir/LibriTTS/$x --des_dir data/$x
   done
 fi
 

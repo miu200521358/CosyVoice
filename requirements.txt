@@ -38,3 +38,5 @@ transformers==4.40.1
 uvicorn==0.30.0
 WeTextProcessing==1.0.3
 wget==3.2
+
+pykakasi==2.3.0
