@@ -12,10 +12,7 @@ COPY cosy_voice/requirements.txt /tmp/requirements.txt
 RUN pip3 install -r /tmp/requirements.txt -i https://mirrors.aliyun.com/pypi/simple/ --trusted-host=mirrors.aliyun.com
 
 # Set PYTHONPATH to include the mounted CosyVoice directory and third_party modules
-ENV PYTHONPATH="/opt/CosyVoice/cosy_voice:/opt/CosyVoice/cosy_voice/third_party/Matcha-TTS:$PYTHONPATH"
-
-# Copy the FastAPI application into the container
-COPY cosy_voice/runtime/python/fastapi_app.py /opt/CosyVoice/runtime/python/fastapi_app.py
+ENV PYTHONPATH="/opt/CosyVoice:/opt/CosyVoice/third_party/Matcha-TTS:$PYTHONPATH"
 
 # Expose the port the app runs on
 EXPOSE 8000

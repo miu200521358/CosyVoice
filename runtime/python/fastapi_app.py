@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import torch
-from cosyvoice.cli.cosyvoice import CosyVoice
+from cosyvoice.cli.cosyvoice import CosyVoice, CosyVoice2
 from cosyvoice.utils.file_utils import load_wav
 from fastapi.responses import StreamingResponse
 import io
@@ -10,9 +10,11 @@ app = FastAPI()
 
 # Initialize the CosyVoice model
 # Adjust the model path and other parameters as needed
-model_dir = "/opt/CosyVoice/pretrained_models/CosyVoice-300M"
+# model_dir = "/opt/CosyVoice/pretrained_models/CosyVoice-300M"
+model_dir = "/opt/CosyVoice/pretrained_models/CosyVoice2-0.5B"
 try:
-    cosyvoice = CosyVoice(model_dir=model_dir)
+    # cosyvoice = CosyVoice(model_dir)
+    cosyvoice = CosyVoice2(model_dir, load_jit=False, load_trt=False, load_vllm=False, fp16=False)
 except Exception as e:
     # If initialization fails, log the error and handle it gracefully
     # For now, we'll let the app start but the endpoint will fail.
@@ -21,7 +23,7 @@ except Exception as e:
 
 
 class TTSRequest(BaseModel):
-    text: str
+    tts: str
     prompt: str
     wav: str
     speed: float = 1.0
@@ -37,7 +39,7 @@ async def text_to_speech(request: TTSRequest):
 
         # Generate speech
         model_output_generator = cosyvoice.inference_zero_shot(
-            request.text, request.prompt, prompt_speech_16k
+            request.tts, request.prompt, prompt_speech_16k
         )
         model_output = next(model_output_generator)
         output_wav = model_output["tts_speech"].numpy()
