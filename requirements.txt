@@ -40,3 +40,4 @@ WeTextProcessing==1.0.3
 wget==3.2
 
 pykakasi==2.3.0
+yakinori==0.1.2

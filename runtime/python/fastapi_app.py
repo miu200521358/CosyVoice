@@ -11,6 +11,7 @@ import json
 import torchaudio
 import tempfile
 import os
+from yakinori import Yakinori
 
 app = FastAPI()
 
@@ -84,15 +85,17 @@ async def text_to_speech_stream(request: StreamTTSRequest):
 
     try:
         prompt_speech_16k = load_wav(request.wav, 16000)
-        kks = pykakasi.kakasi()
+        # kks = pykakasi.kakasi()
+        yakinori = Yakinori()
 
         def text_generator():
             """テキストジェネレーター"""
             for text in request.texts:
                 if text.strip():  # 空でないテキストのみ処理
-                    result = kks.convert(text.strip())
-                    jp_tts = " ".join([item['hira'] for item in result])
-                    yield jp_tts
+                    # result = kks.convert(text.strip())
+                    # jp_tts = " ".join([item['hira'] for item in result])
+                    # yield jp_tts
+                    yield yakinori.get_hiragana_sentence(yakinori.get_parsed_list(text), is_hatsuon=True)
 
         def generate_audio_stream():
             """音声ストリーミングジェネレーター"""
