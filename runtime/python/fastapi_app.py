@@ -68,7 +68,7 @@ async def common_tts_logic(
 
         # 音声生成ジェネレーターを作成
         model_output_generator = cosyvoice.inference_zero_shot(
-            texts, prompt, prompt_speech_16k, speed=speed
+            texts, prompt, prompt_speech_16k, speed=speed, stream=stream
         )
 
         if stream:
@@ -191,6 +191,7 @@ async def text_to_speech_stream(request: StreamTTSRequest):
     def text_generator():
         """要求されたテキストのジェネレーター"""
         for text in request.texts:
+            print(f"******** Processing text chunk: {text}")
             yield text
 
     try:
