@@ -9,7 +9,7 @@ RUN apt-get -y install git unzip git-lfs g++ curl
 # here we use python==3.10 because we cannot find an image which have both python3.8 and torch2.0.1-cu118 installed
 # Install requirements from the mounted volume
 COPY cosy_voice/requirements.txt /tmp/requirements.txt
-RUN pip3 install -r /tmp/requirements.txt -i https://mirrors.aliyun.com/pypi/simple/ --trusted-host=mirrors.aliyun.com
+RUN pip3 install -r /tmp/requirements.txt
 
 # Set PYTHONPATH to include the mounted CosyVoice directory and third_party modules
 ENV PYTHONPATH="/opt/CosyVoice:/opt/CosyVoice/third_party/Matcha-TTS:$PYTHONPATH"
